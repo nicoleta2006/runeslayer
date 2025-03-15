@@ -1,0 +1,27 @@
+getgenv().Message = "i assraypa kids"
+repeat task.wait() until game:IsLoaded()
+
+-- Access Roblox services directly
+local TextChatService = game:GetService("TextChatService")
+local isModern = (TextChatService.ChatVersion == Enum.ChatVersion.TextChatService)
+
+if isModern then
+    local channel = TextChatService.TextChannels["RBXGeneral"]
+    if channel then
+        local maxIterations = 10000  -- Limit the number of messages sent
+        for i = 1, maxIterations do
+            task.wait(0.1)  -- Reduced delay to 1 second between messages
+            local success, err = pcall(function()
+                channel:SendAsync(getgenv().Message)
+            end)
+            if not success then
+                warn("Failed to send message: " .. err)
+                break  -- Exit the loop if there's an error
+            end
+        end
+    else
+        warn("RBXGeneral channel not found.")
+    end
+else
+    warn("Modern chat system not enabled.")
+end
